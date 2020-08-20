@@ -1,5 +1,13 @@
 package bosspackage
 
+import (
+	"encoding/json"
+	"io/ioutil"
+	"os"
+
+	"github.com/hashload/boss/internal/pkg/utils"
+)
+
 type BossPackage struct {
 	Name         string            `json:"name"`
 	Description  string            `json:"description"`
@@ -10,6 +18,7 @@ type BossPackage struct {
 	Scripts      map[string]string `json:"scripts,omitempty"`
 	Dependencies map[string]string `json:"dependencies"`
 	Locked       *ProjectLock      `json:"-"`
+	path         string            `json:"-"`
 }
 
 func MakeNew() *BossPackage {
@@ -24,8 +33,16 @@ func MakeNew() *BossPackage {
 
 func LoadOrNew(path string) *BossPackage {
 	project := MakeNew()
-
+	project.path = path
 	project.Locked = LoadProjectLock(project)
 
 	return project
+}
+
+func (p *BossPackage) Save() {
+	m, err := json.MarshalIndent(p, "", "\t")
+	utils.CheckError(err)
+
+	err = ioutil.WriteFile(p.path, m, os.ModePerm)
+	utils.CheckError(err)
 }

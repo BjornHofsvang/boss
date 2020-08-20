@@ -2,6 +2,7 @@ package boss
 
 import (
 	"github.com/hashload/boss/internal/pkg/configuration"
+	"github.com/hashload/boss/internal/pkg/environment"
 	"github.com/hashload/boss/pkg/cmd/cli/initialize"
 	"github.com/hashload/boss/pkg/cmd/cli/login"
 	"github.com/hashload/boss/pkg/cmd/cli/upgrade"
@@ -16,6 +17,7 @@ func NewBossCommand(name string) *cobra.Command {
 	})
 
 	config := configuration.LoadConfiguration()
+	env := environment.InitializeEnv(config, name)
 
 	root := &cobra.Command{
 		Use:   name,
@@ -26,8 +28,8 @@ func NewBossCommand(name string) *cobra.Command {
 	config.BindFlags(root)
 
 	root.AddCommand(version.NewVersionCommand())
-	root.AddCommand(initialize.NewCommand())
-	root.AddCommand(login.NewLoginCommand(config))
+	root.AddCommand(initialize.NewInitializeCommand(env))
+	root.AddCommand(login.NewLoginCommand(env))
 	root.AddCommand(upgrade.NewUpgradeCommand())
 
 	return root

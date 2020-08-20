@@ -22,6 +22,7 @@ import (
 type Configuration struct {
 	GlobalMode          bool             `json:"-"`
 	DebugMode           bool             `json:"-"`
+	Internal            bool             `json:"-"`
 	Id                  string           `json:"id"`
 	Auth                map[string]*Auth `json:"auth"`
 	PurgeTime           time.Duration    `json:"purge_after"`
