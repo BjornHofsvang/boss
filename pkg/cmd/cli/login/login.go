@@ -29,7 +29,6 @@ func NewLoginCommand(env *environment.Env) *cobra.Command {
 				env.Config.SaveConfiguration()
 				return
 			}
-
 			var auth *configuration.Auth
 			var repo string
 			if len(args) > 0 && args[0] != "" {
